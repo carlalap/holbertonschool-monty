@@ -2,7 +2,6 @@
 #define MONTY_H
 
 /* Libraries */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -54,7 +53,6 @@ void push(stack_t **stack, unsigned int line_number);
 void pall(stack_t **stack, unsigned int line_number);
 void stack(stack_t **stack, unsigned int line_number);
 void queue(stack_t **stack, unsigned int line_number);
-void free_stack(stack_t *head);
 
 
 

@@ -1,5 +1,4 @@
 #include "monty.h"
-
 /**
  * free_stack - frees a stack_t list.
  * @head: a pointer to the head
