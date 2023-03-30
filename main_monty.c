@@ -1,68 +1,91 @@
 #include "monty.h"
-int SQ = 1;
+
 /**
- * main - main function for monty
- * @argc: argument count
- * @argv: array of argument strings
+ * main - Monty bitcode interpreter
  *
- * Return: exit code
+ * @argc: number of args passed
+ * @argv: Array of args passed
+ * Return: EXIT_SUCCESS, or EXIT_FAILURE
  */
-int main(int argc, char **argv)
+
+int main(int argc, char *argv[])
 {
-	FILE *file_in;
-	unsigned int line_number = 0;
-	char *line = NULL;
-	stack_t *top = NULL;
-	instruction_t *instruction = NULL;
-	size_t glsize = 0;
-	/* check for proper number of arguments */
+	char *buffer = NULL;
+	size_t buffsize = 0;
+	FILE *fp;
+	stack_t *stack = NULL;
+	int line_number = 0;
+
 	if (argc != 2)
-	{
-		fprintf(stdout, "USAGE: monty file\n");
-		exit(EXIT_FAILURE);
-	}
-	/* open file */
-	file_in = fopen(argv[1], "r");
-	if (file_in == NULL)
-	{
-		fprintf(stdout, "Error: Can't open file %s\n", argv[1]);
-		exit(EXIT_FAILURE);
-	}
-	/* parse file */
-	while (getline(&line, &glsize, file_in) != -1)
+		print_error(1, argv[1], 0, NULL);
+
+	fp = fopen(argv[1], "r");
+	if (fp == NULL)
+		print_error(2, argv[1], 0, NULL);
+
+	while ((getline(&buffer, &buffsize, fp) != EOF) && (errno == 0))
 	{
 		line_number++;
-		instruction = parse_line(line);
-		if (!(instruction->opcode) || instruction->opcode[0] == '#')
+		if (buffer == NULL)
 		{
-			free(instruction);
-			if (line)
-				free(line);
-			line = NULL;
-			continue;
+			fprintf(stderr, "Error: malloc failed\n");
+			errno = 12;
 		}
-		if (instruction->f)
-			instruction->f(&top, line_number);
-		else
-		{
-			fprintf(stdout, "L%d: unknown instruction %s\n",
-				line_number, instruction->opcode);
-			if (line)
-				free(line);
-			if (top)
-				free_stack(top);
-			free(instruction);
-			fclose(file_in);
-			exit(EXIT_FAILURE);
-		}
-		if (line)
-			free(line);
-		line = NULL;
-		free(instruction);
+
+		instruction_checker(&buffer, &stack, argv[1], line_number);
+		buffsize = 0;
 	}
-	if (line)
-		free(line);
-	free_stack(top);
-	fclose(file_in);
-	return (0);
+
+	free_stack_t(stack);
+	free(buffer);
+	fclose(fp);
+
+	if (errno != 0)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
+
+/**
+ * instruction_checker - parses lines in file,
+ * and compares to instruction_t array to find function pointer.
+ * @buffer: pointer to buffer storing line from .m file
+ * @stack: pointer to head of stack_t list
+ * @file: name of file being read
+ * @line_number: current line
+ */
+
+void instruction_checker(
+			char **buffer,
+			stack_t **stack,
+			char *file,
+			int line_number
+			)
+{
+	char *opcode = NULL;
+	int i;
+	instruction_t commands[] = {
+	{"push", push},		{"pall", pall},
+	{NULL, NULL}
+};
+
+	opcode = strtok(*buffer, " \n");
+
+	if (opcode != NULL)
+	{
+		for (i = 0; commands[i].opcode; i++)
+		{
+			if (strcmp(opcode, commands[i].opcode) == 0)
+			{
+				commands[i].f(&(*stack), line_number);
+				break;
+			}
+		}
+
+		if (commands[i].opcode == NULL)
+		{
+			print_error(3, file, line_number, opcode);
+		}
+	}
+	free(*buffer);
+	*buffer = NULL;
 }

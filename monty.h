@@ -6,9 +6,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
-#define UNUSED(x) (void)(x)
-#define LINE_MAX 1024
+#include <unistd.h>
+#include <stdarg.h>
+#include <limits.h>
+#include <errno.h>
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -44,15 +45,24 @@ typedef struct instruction_s
 
 /* Function prototypes */
 
-extern int SQ;
-instruction_t *parse_line(char *line);
-void free_stack(stack_t *head);
-char *get_opcode(char *string);
-int is_int(char *str);
+void free_stack_t(stack_t *stack);
 void push(stack_t **stack, unsigned int line_number);
 void pall(stack_t **stack, unsigned int line_number);
-void stack(stack_t **stack, unsigned int line_number);
-void queue(stack_t **stack, unsigned int line_number);
+
+void push_error(stack_t **newNode, unsigned int line_number);
+void instruction_checker(
+			char **buffer,
+			stack_t **stack,
+			char *file,
+			int line_number
+			);
+
+void print_error	(
+			unsigned int error_code,
+			char *file,
+			unsigned int line_number,
+			char *opcode
+			);
 
 
 

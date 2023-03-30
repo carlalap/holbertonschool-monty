@@ -1,50 +1,63 @@
 #include "monty.h"
+
 /**
  * push - pushes an element to the stack.
- * @stack: the stack
- * @line_number: the current line number
- * Return: void
+ * @stack: pointer to head node
+ * @line_number: line number
  */
+
 void push(stack_t **stack, unsigned int line_number)
 {
-	stack_t *new, *tmp;
-	char *push_arg = strtok(NULL, "\n \t");
-	int pVal;
+	stack_t *newNode, *temp = *stack;
+	char *n;
+	int i;
 
-	/*if push, tests if the push_arg was valid or not */
-	if (!is_int(push_arg))
+	newNode = malloc(sizeof(stack_t));
+	if (newNode == NULL)
 	{
-		fprintf(stdout, "L%u: usage: push integer\n", line_number);
-		exit(EXIT_FAILURE);
+		fprintf(stderr, "Error: malloc failed\n");
+		free_stack_t(*stack);
+
+		errno = 12;
+		return;
 	}
-	pVal = atoi(push_arg);
-	new = malloc(sizeof(stack_t));
-	if (new == NULL)
+	newNode->prev = NULL;
+	n = strtok(NULL, " \n");
+	if (n)
 	{
-		fprintf(stdout, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
-	new->n = pVal;
-	new->prev = NULL;
-	new->next = NULL;
-	/** checks if stack is empty **/
-	if ((*stack) == NULL)
-		*stack = new;
-	else if (SQ)
-	{
-		/** puts new node on top if not empty **/
-		(*stack)->prev = new;
-		new->next = *stack;
-		*stack = new;
+		for (i = 0; n[i] != '\0'; i++)
+			if ((n[i] != '-') && (isdigit(n[i]) == 0))
+			{
+				push_error(&newNode, line_number);
+				return;
+			}
+		newNode->n = atoi(n);
 	}
 	else
 	{
-		/**puts new node on the bottom **/
-		tmp = *stack;
-		while (tmp->next != NULL)
-			tmp = tmp->next;
-		tmp->next = new;
-		new->prev = tmp;
+		push_error(&newNode, line_number);
+		return;
 	}
+	if (temp == NULL)
+	{
+		newNode->next = NULL;
+		*stack = newNode;
+		return;
+	}
+	newNode->next = temp;
+	temp->prev = newNode;
+	*stack = newNode;
+}
 
+/**
+ * push_error - prints error message, frees node, and sets errno
+ * @node: pointer to node
+ * @line_number: line number to print in error
+ */
+
+void push_error(stack_t **node, unsigned int line_number)
+{
+	fprintf(stderr, "L%d: usage: push integer\n", line_number);
+	free(*node);
+	errno = 1;
 }
