@@ -65,7 +65,7 @@ void instruction_checker(
 	int i;
 	instruction_t commands[] = {
 	{"push", push},		{"pall", pall},
-	{NULL, NULL}
+	{"pop", pop},		{NULL, NULL}
 };
 
 	opcode = strtok(*buffer, " \n");

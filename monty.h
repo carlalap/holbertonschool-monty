@@ -48,7 +48,7 @@ typedef struct instruction_s
 void free_stack_t(stack_t *stack);
 void push(stack_t **stack, unsigned int line_number);
 void pall(stack_t **stack, unsigned int line_number);
-
+void pop(stack_t **stack, unsigned int line_number);
 void push_error(stack_t **newNode, unsigned int line_number);
 void instruction_checker(
 			char **buffer,
