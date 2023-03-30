@@ -46,7 +46,7 @@ typedef struct instruction_s
 /* Function prototypes */
 
 extern int SQ;
-instruction_t *parser(char *line);
+instruction_t *parse_line(char *line);
 void free_stack(stack_t *head);
 char *get_opcode(char *string);
 int is_int(char *str);
