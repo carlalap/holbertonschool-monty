@@ -7,14 +7,14 @@
  *
  * Return: void
  */
-void pall(stack_t **stack, 
+void pall(stack_t **stack,
 		__attribute__((unused)) unsigned int line_number
 		)
 {
 	stack_t *tmp;
 
 	tmp = *stack;
-	
+
 	while (tmp != NULL)
 	{
 		printf("%d\n", tmp->n);

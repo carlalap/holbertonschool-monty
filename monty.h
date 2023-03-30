@@ -57,13 +57,10 @@ void instruction_checker(
 			int line_number
 			);
 
-void print_error	(
-			unsigned int error_code,
-			char *file,
-			unsigned int line_number,
-			char *opcode
-			);
-
-
-
+void print_error(
+		unsigned int error_code,
+		char *file,
+		unsigned int line_number,
+		char *opcode
+		);
 #endif
