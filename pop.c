@@ -11,14 +11,13 @@ void pop(stack_t **stack, unsigned int line_number)
 {
 	stack_t *tmp;
 
-	if ((*stack) == NULL)
+	if ((*stack) == NULL) /*check if the pointer of topstack is empty*/
 	{
 		fprintf(stderr, "L%d: can't pop an empty stack\n", line_number);
-		errno = 1;
-		return;
+		exit(EXIT_FAILURE);
 	}
 
-	tmp = *stack;
-	*stack = (*stack)->next;
+	tmp = *stack; /* store the top of stack in tmp  */
+	*stack = (*stack)->next; /*update the topstack to next elem*/
 	free(tmp);
 }
