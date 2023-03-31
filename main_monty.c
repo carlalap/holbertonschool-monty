@@ -67,7 +67,7 @@ void instruction_checker(
 	instruction_t commands[] = {
 	{"push", push},		{"pall", pall},
 	{"pop", pop},		{"pint", pint},
-	{"add", add},
+	{"add", add},		{"swap", swap},
 	{NULL, NULL}
 
 
