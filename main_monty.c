@@ -59,14 +59,14 @@ void instruction_checker(
 			stack_t **stack,
 			char *file,
 			int line_number
-			)
+)
+
 {
 	char *opcode = NULL;
 	int i;
 	instruction_t commands[] = {
 	{"push", push},		{"pall", pall},
 	{"pop", pop},		{NULL, NULL}
-	{"pint", pint}		{NULL, NULL}
 };
 
 	opcode = strtok(*buffer, " \n");
