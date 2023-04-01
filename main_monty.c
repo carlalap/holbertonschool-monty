@@ -68,6 +68,7 @@ void instruction_checker(
 	{"push", push},		{"pall", pall},
 	{"pop", pop},		{"pint", pint},
 	{"add", add},		{"swap", swap},
+	{"nop", nop},
 	{NULL, NULL}
 
 
