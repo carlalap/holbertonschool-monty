@@ -6,6 +6,7 @@
  * @stack: The stack
  * @line_number: The line number
  */
+
 void pint(stack_t **stack, unsigned int line_number)
 {
 	if (*stack == NULL) /* Check if stack is empty */
